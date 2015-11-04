@@ -5,7 +5,8 @@
     "description": "a fast php framework",
 	"license":"BSD-3-Clause",
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "phpmailer/phpmailer": "^5.2"
     },
     "authors": [
         {

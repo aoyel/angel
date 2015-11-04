@@ -69,6 +69,9 @@ class Application extends Object {
 	 */
 	public $layout = 'main';
 	
+	
+	public $runMode = "cli";
+	
 	/**
 	 * application modules
 	 * @var string
@@ -116,9 +119,25 @@ class Application extends Object {
 		$this->errorHandel->register();
 	}
 	
+	/**
+	 * check 
+	 * @return boolean
+	 */
+	public function isHttpMode(){
+		return $this->runMode === "http";
+	}
+		
+	
 	public function run(){
-		$this->server->start();
-	}	
+		
+		if(php_sapi_name() === "cli"){
+			$this->runMode = "cli";
+			$this->server->start();
+		}else{
+			$this->runMode = "http";
+			//$this->handleRequest($request);			
+		}
+	}
 }
 
 ?>
