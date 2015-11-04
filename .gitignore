@@ -5,3 +5,7 @@ assets/*
 .settings/*
 .project
 .buildpath
+/vendor
+/cubrid
+composer.phar
+
