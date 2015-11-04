@@ -6,7 +6,11 @@ use app\components\BaseController;
 class IndexController extends BaseController{
 	
 	public function actionIndex(){
-		return $this->render();
+		setcookie("haha","haha");
+		setcookie("aa","cc");
+		session_start();
+		$_SESSION['a'] = "c";
+		$this->render();
 	}
 }
 ?>

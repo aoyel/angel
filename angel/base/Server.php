@@ -112,6 +112,7 @@ class Server extends Object {
 		if(!class_exists($controller)){
 			throw new NotFoundException("{$controller} is not found!");
 		}
+		ob_start();
 		/**
 		 * create controller object
 		 */
@@ -122,13 +123,15 @@ class Server extends Object {
 				'Respone'=>$respone,
 				'Request'=>$request
 		]);
-		
-		Angel::app()->controller = $m;				
+		Angel::app()->controller = $m;		
 		$a = "action{$this->action}";
 		if(!method_exists($m,$a)){
 			throw new NotFoundException("{$a} not exists", 404);
 		}
-		return call_user_func(array($m,$a));
+		call_user_func(array($m,$a));
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
 	}
 	
 	public function handelStaticFile($requestUrl,\swoole_http_response $respone){
@@ -159,7 +162,7 @@ class Server extends Object {
 	public function beforeRequest($request, $respone) {
 		return true;
 	}
-	
+		
 	/**
 	 * init global vars
 	 *
