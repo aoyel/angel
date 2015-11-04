@@ -1,0 +1,29 @@
+{
+    "name": "aoyel/angel",
+	"type": "project",
+	"keywords": ["framework", "angel"],
+    "description": "a fast php framework",
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.7"
+    },
+    "authors": [
+        {
+            "name": "smile",
+            "email": "smile@aoyel.com"
+        }
+    ],
+	"autoload": {
+        "psr-4": {
+            "angel\\": "angel/"
+        }
+    },
+	"extra": {
+		"asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+	}
+}

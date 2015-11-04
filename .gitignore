@@ -1,0 +1,7 @@
+runtime/*
+assets/*
+.sass-cache/*
+*.tmp
+.settings/*
+.project
+.buildpath
