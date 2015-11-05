@@ -2,6 +2,9 @@
 
 namespace angel;
 
+use angel\base\Logger;
+use angel\base\Object;
+
 if(!defined("APP_DEBUG"))
 	define("APP_DEBUG", true);
 
@@ -9,19 +12,18 @@ if(!defined("APP_DEBUG"))
  *
  * @author smile
  */
-class Angel {
+class Angel extends Object{
 	
 	/**
 	 *
 	 * @var \angel\base\Application
 	 */
-	public static $app;
-	
+	public static $app;	
 	/**
 	 *
 	 * @var array
 	 */
-	public static $namespaceMap = [ ];
+	public static $namespaceMap = [];
 	
 	/**
 	 *
@@ -30,12 +32,10 @@ class Angel {
 	public static function app() {
 		return self::$app;
 	}
+	
 	public static function addNamespaceMap($namespace, $path) {
 		self::$namespaceMap [$namespace] = $path;
 	}
-	public static function log($message, $level = \angel\base\Logger::LEVEL_DEBUG) {
-	}
-	
 	/**
 	 * public static function createObject($type, array $params = [])
 	 * {
@@ -85,6 +85,9 @@ class Angel {
 		$refClass = new \ReflectionClass ( $class );
 		return $refClass->newInstanceArgs ( ( array ) $re_args );
 	}
+	
+	
+	
 	public static function autoload($className) {
 		$prefix = strstr ( $className, '\\', true );
 		if (in_array ( $prefix, array_keys ( self::$namespaceMap ) )) {
@@ -108,6 +111,26 @@ class Angel {
 			require $fileName;
 			return true;
 		}
+	}
+	
+	public static function debug($msg,$category='application'){
+		self::log($msg,Logger::LEVEL_DEBUG,$category);
+	}
+	
+	public static function info($msg,$category='application'){
+		self::log($msg,Logger::LEVEL_INFO,$category);
+	}
+	
+	public static function warning($msg,$category='application'){
+		self::log($msg,Logger::LEVEL_WARNING,$category);
+	}
+	
+	public static function error($msg,$category='application'){
+		self::log($msg,Logger::LEVEL_ERROR,$category);
+	}
+		
+	private static function log($msg,$level,$category){
+		self::$app->log->log($msg,$level,$category);
 	}
 }
 

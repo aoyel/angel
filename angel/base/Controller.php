@@ -18,6 +18,7 @@ class Controller extends Object {
 	
 	public $id;	
 	public $layout = "default";
+	public $action = null;
 	
 	public function render($view=null,$params = [],$echo=true){
 		if($echo)
@@ -34,8 +35,7 @@ class Controller extends Object {
 			'data'=>$data
 		]);
 		return true;
-	}
-	
+	}	
 	/**
 	 * 
 	 * @param get $name
@@ -43,6 +43,41 @@ class Controller extends Object {
 	 */
 	public function getParam($name,$defaultVal){
 		
+	}
+	
+	protected function beforeAction($action){
+		return true;
+	}
+	
+	protected function afterAction(){
+		
+	}
+	
+	protected function isValidAction($action){
+		return method_exists($this, "action".ucfirst($action));
+	}
+	
+	/**
+	 * 
+	 * @param string $action
+	 * @return string|boolean
+	 */
+	public function run($action){
+		if($this->isValidAction($action) && $this->beforeAction($action)){
+			$this->action = $action;
+			$content = $this->execute("action".ucfirst($action));
+			$this->afterAction();
+			return $content;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param string $action
+	 */
+	protected function execute($action){
+		return call_user_func([$this,$action]);
 	}
 }
 

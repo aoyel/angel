@@ -17,6 +17,9 @@ use angel\helper\FileHelper;
  *      
  */
 class Server extends Object {
+	
+	const MIN_GZIP_SIZE = 215;
+	
 	/**
 	 *
 	 * @param string $host        	
@@ -32,7 +35,7 @@ class Server extends Object {
 		) );
 		$server->start ();
 	}
-	
+		
 	/**
 	 * request handel
 	 * @param \swoole_http_request $request        	
@@ -45,30 +48,7 @@ class Server extends Object {
 		}
 		$this->afterRequest ( $request, $respone );
 	}
-	
-	/**
-	 * parse url
-	 * @param string $path
-	 * @return multitype:string |multitype:string Ambigous <unknown, string>
-	 */
-	protected function parseUrl($path) {
-		$route = [ 
-				"controller" => "Index",
-				"action" => "Index" 
-		];
-		$path = ltrim ( $path, "//" );
-		if ($path === '') {
-			return $route;
-		}
-		$request = explode ( '/', $path, 3 );
-		if (count ( $request ) < 1 && empty ( $request [0] )) {
-			return $route;
-		}
-		$route ['controller'] = isset ( $request [0] ) ? $request [0] : $route ['controller'];
-		$route ['action'] = isset ( $request [1] ) ? $request [1] : $route ['action'];
-		return $route;
-	}
-	
+		
 	/**
 	 * handel client request
 	 * @param \swoole_http_request $request
@@ -78,60 +58,21 @@ class Server extends Object {
 	public function handelRequest(\swoole_http_request $request, \swoole_http_response $respone) {	
 		$requestUrl = $_SERVER['REQUEST_URI'];
 		if($this->handelStaticFile($requestUrl,$respone))
-			return;
+			return true;
 		try {
-			$content = $this->processRequest($request, $respone);
+			ob_start();			
+			$content = Angel::app()->dispatch->handelRequest($requestUrl);
+			$echo_output = ob_get_contents();
+			if($echo_output)
+				$respone->write($echo_output);
 			if($content)
-				$respone->end($content);
-			else{
-				$respone->status(404);
-				$respone->end();
-			}
+				$respone->write($content);
+			ob_end_clean();
+			$respone->end();			
 		} catch (Exception $e) {
 			$respone->status(500);
 			$respone->end($e->getMessage());
 		}
-	}
-	
-	public function processRequest(\swoole_http_request $request, \swoole_http_response $respone){
-		$requestUrl = $_SERVER['REQUEST_URI'];
-		$route = $this->parseUrl($requestUrl);
-		if(!isset($route['controller']) || !isset($route['action'])){
-			throw new NotFoundException("request not found", 404);
-		}
-		$this->controller = ucwords($route['controller']);
-		$this->action = ucwords($route['action']);
-		$appNamespace = Angel::app()->appNamespace;
-		$controller =  implode("\\", [
-				"",
-				Angel::app()->appNamespace,
-				"controllers",
-				$this->controller."Controller"
-				]);
-		
-		if(!class_exists($controller)){
-			throw new NotFoundException("{$controller} is not found!");
-		}
-		ob_start();
-		/**
-		 * create controller object
-		 */
-		$m = Angel::createObject([
-				'class'=>$controller,
-				'id'=>$this->controller,
-				'action'=>$this->action,
-				'Respone'=>$respone,
-				'Request'=>$request
-		]);
-		Angel::app()->controller = $m;		
-		$a = "action{$this->action}";
-		if(!method_exists($m,$a)){
-			throw new NotFoundException("{$a} not exists", 404);
-		}
-		call_user_func(array($m,$a));
-		$content = ob_get_contents();
-		ob_end_clean();
-		return $content;
 	}
 	
 	public function handelStaticFile($requestUrl,\swoole_http_response $respone){
@@ -145,7 +86,7 @@ class Server extends Object {
 				$respone->status(304);
 				$respone->end();
 			}else{
-				if(filesize($filename) > 216){
+				if(filesize($filename) > self::MIN_GZIP_SIZE){
 					$respone->gzip();
 				}				
 				$respone->header('Content-Type', $mimeType);
@@ -169,10 +110,10 @@ class Server extends Object {
 	 * @param \swoole_http_request $request        	
 	 */
 	public function initVars($request) {
-		$_GET = isset ( $request->get ) ? $request->get : [ ];
-		$_POST = isset ( $request->post ) ? $request->post : [ ];
+		$_GET = isset ( $request->get ) ? Angel::app()->request->stripSlashes($request->get) : [ ];
+		$_POST = isset ( $request->post ) ? Angel::app()->request->stripSlashes($request->post) : [ ];
 		$_FILES = isset ( $request->files ) ? $request->files : [ ];
-		$_COOKIE = isset ( $request->cookie ) ? $request->cookie : [ ];
+		$_COOKIE = isset ( $request->cookie ) ? Angel::app()->request->stripSlashes($request->cookie) : [ ];
 		$_REQUEST = array_merge ( $_GET, $_POST, $_COOKIE );
 		/**
 		 * convert key to upper

@@ -35,6 +35,11 @@ use angel\Angel;
  * 
  * @property array components configure conponents
  * 
+ * @property \anel\base\Dispatch $dispatch configure conponents
+ * 
+ * @property \anel\base\Request $request configure conponents
+ * 
+ * @property \anel\base\Respone $respone configure conponents
  * 
  */
 class Application extends Object {
@@ -88,9 +93,12 @@ class Application extends Object {
 	public function coreComponents()
 	{
 		return [
-			'log' => ['class' => '\angel\base\Logger'],
+			'log' => ['class' => '\angel\log\FileLogger'],
 			'view' => ['class' => '\angel\base\View'],
-			'errorHandel'=>['class'=>'\angel\base\ErrorHandel']
+			'errorHandel'=>['class'=>'\angel\base\ErrorHandel'],
+			'dispatch'=>['class'=>'\angel\base\Dispatch'],
+			'request'=>['class'=>'\angel\base\Request'],
+			'respone'=>['class'=>'\angel\base\Respone']
 		];
 	}
 	
@@ -103,6 +111,14 @@ class Application extends Object {
 		$components = array_merge($coreComponents,$this->components);
 		unset($this->components);
 		$this->loadComponents($components);
+		$this->initDb();
+	}
+	
+	/**
+	 * init data base
+	 */
+	protected function initDb(){
+		$this->db->connection();
 	}
 	
 	protected function loadComponents($components){
@@ -125,17 +141,15 @@ class Application extends Object {
 	 */
 	public function isHttpMode(){
 		return $this->runMode === "http";
-	}
-		
+	}		
 	
-	public function run(){
-		
+	public function run(){		
 		if(php_sapi_name() === "cli"){
 			$this->runMode = "cli";
 			$this->server->start();
 		}else{
 			$this->runMode = "http";
-			//$this->handleRequest($request);			
+			echo $this->dispatch->handelRequest($_SERVER['REQUEST_URI']);		
 		}
 	}
 }
