@@ -2,13 +2,11 @@
 
 namespace angel\db\schema\mysqli;
 
-
 use angel\base\Db;
 use angel\exception\DbConnectionException;
 use angel\exception\DbException;
 use angel\Angel;
 use angel\base\Logger;
-
 
 class MysqliSchema extends Db{
 	
@@ -264,6 +262,14 @@ class MysqliSchema extends Db{
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	public function find($sql = null){
+			
+	}
+	
+	
 	protected function processResult(){
 		
 		if(empty($this->_statement))
@@ -278,12 +284,60 @@ class MysqliSchema extends Db{
 			return [];
 		/**
 		 * mysqli get query
-		 */
-		while ($field = $metadata->fetch_field()){
-			var_dump($field);
+		 */		
+		$row = [];
+		$params = [];
+		$result = [];
+		$shouldStoreResult = false;
+		
+		while ($field = $metadata->fetch_field()) {
+			if ($field->type == 255)
+				$shouldStoreResult = true;
+					
+			$row[$field->name] = null;
+			$params[] = & $row[$field->name];
 		}
+		
+		if ($shouldStoreResult)
+			$this->_statement->store_result();
+		
+		call_user_func_array(array($this->_statement, 'bind_result'), $params);
+		
+		$this->totalCount = 0;
+		$this->count = 0;
+		while ($this->_statement->fetch()) {
+			foreach ($row as $key => $val) {
+				if (is_array($val)) {
+					foreach ($val as $k => $v)
+						$x[$key][$k] = $v;
+				} else
+					$x[$key] = $val;
+			}
+			array_push ($result, $x);				
+		}
+		
+		
+		if ($shouldStoreResult)
+			$this->_statement->free_result();
+		$this->_statement->close();
+		// stored procedures sometimes can return more then 1 resultset
+		if ($this->getDb()->more_results())
+			$this->getDb()->next_result();
+		
+// 		if (in_array ('SQL_CALC_FOUND_ROWS', $this->_queryOptions)) {
+// 			$stmt = $this->mysqli()->query ('SELECT FOUND_ROWS()');
+// 			$totalCount = $stmt->fetch_row();
+// 			$this->totalCount = $totalCount[0];
+// 		}
+// 		if ($this->returnType == 'Json')
+// 			return json_encode ($results);
+		var_dump($result);
+		die();
+		return $results;
+		
+		
 	}
-    
+	    
 	/**
 	 * build inser sql schema
 	 * @param string $tableName
@@ -341,6 +395,7 @@ class MysqliSchema extends Db{
 		
 		if($isInsert){
 			foreach ($columns as $row){
+				$row = $this->getDb()->real_escape_string($row);
 				$this->_query .= "'{$row}',";
 			}
 		}else{
