@@ -12,7 +12,7 @@ if(!defined("APP_DEBUG"))
  *
  * @author smile
  */
-class Angel extends Object{
+class Angel{
 	
 	/**
 	 *

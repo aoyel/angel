@@ -25,12 +25,12 @@ return [
 						] 
 				],
 				'db' => [ 
-						'class' => 'angel\db\schema\mysqli\MysqliSchema',
+						'class' => 'angel\db\schema\mysqli\Mysqli',
 						'host' => 'localhost',
 						'port' => 3306,
 						'username'=>'root',
 						'password'=>'root',
-						'database'=>'mt',
+						'database'=>'angel',
 						'charset'=>'utf-8',
 						'prefix'=>'tbl_'
 				] 

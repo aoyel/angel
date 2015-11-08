@@ -12,47 +12,6 @@ use angel\exception\NotFoundException;
  */
 class Dispatch extends Object{
 	
-	public function processRequest(\swoole_http_request $request, \swoole_http_response $respone){
-		
-		$route = $this->parseUrl($requestUrl);
-		if(!isset($route['controller']) || !isset($route['action'])){
-			throw new NotFoundException("request not found", 404);
-		}
-		$this->controller = ucwords($route['controller']);
-		$this->action = ucwords($route['action']);
-		$appNamespace = Angel::app()->appNamespace;
-		$controller =  implode("\\", [
-				"",
-				Angel::app()->appNamespace,
-				"controllers",
-				$this->controller."Controller"
-				]);
-	
-		if(!class_exists($controller)){
-			throw new NotFoundException("{$controller} is not found!");
-		}
-		ob_start();
-		/**
-		 * create controller object
-		*/
-		$m = Angel::createObject([
-				'class'=>$controller,
-				'id'=>$this->controller,
-				'action'=>$this->action,
-				'Respone'=>$respone,
-				'Request'=>$request
-		]);
-		Angel::app()->controller = $m;
-		$a = "action{$this->action}";
-		if(!method_exists($m,$a)){
-			throw new NotFoundException("{$a} not exists", 404);
-		}
-		call_user_func(array($m,$a));
-		$content = ob_get_contents();
-		ob_end_clean();
-		return $content;
-	}
-	
 	/**
 	 * handel request
 	 * @param string $request
@@ -76,8 +35,6 @@ class Dispatch extends Object{
 		return $controller->run($route['action']);
 	}
 	
-	
-		
 	/**
 	 * parse url
 	 * @param string $path

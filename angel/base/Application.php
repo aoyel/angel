@@ -33,13 +33,13 @@ use angel\Angel;
  * 
  * @property \anel\base\Action $action the application controller
  * 
- * @property array components configure conponents
+ * @property \angel\base\Db $db the application db object
  * 
- * @property \anel\base\Dispatch $dispatch configure conponents
+ * @property \angel\base\Dispatch $dispatch configure conponents
  * 
- * @property \anel\base\Request $request configure conponents
+ * @property \angel\base\Request $request configure conponents
  * 
- * @property \anel\base\Respone $respone configure conponents
+ * @property \angel\base\Respone $respone configure conponents
  * 
  */
 class Application extends Object {

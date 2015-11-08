@@ -11,6 +11,7 @@ namespace angel\base;
  *
  */
 class Action extends Object{
+	
 }
 
 ?>
