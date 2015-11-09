@@ -20,37 +20,26 @@ class Controller extends Object {
 	public $layout = "default";
 	public $action = null;
 	
-	public function render($view=null,$params = [],$echo=true){
+	public function render($view=null,$params = [],$echo=false){
 		if($echo)
-			echo Angel::app()->view->render($view,$params);
+			Angel::app()->respone->write(Angel::app()->view->render($view,$params));
 		else
 			return Angel::app()->view->render($view,$params);
 	}			
-	/**
-	 * 
-	 */
+	
 	public function ajaxMsg($status,$data){
-		echo json_encode([
+		Angel::app()->respone->write(json_encode([
 			'status'=>$status,
 			'data'=>$data
-		]);
-		return true;
-	}	
-	/**
-	 * 
-	 * @param get $name
-	 * @param post $defaultVal
-	 */
-	public function getParam($name,$defaultVal){
-		
+		]));
 	}
 	
 	protected function beforeAction($action){
 		return true;
 	}
 	
-	protected function afterAction(){
-		
+	protected function afterAction($action){
+		return $action;
 	}
 	
 	protected function isValidAction($action){
@@ -66,7 +55,7 @@ class Controller extends Object {
 		if($this->isValidAction($action) && $this->beforeAction($action)){
 			$this->action = $action;
 			$content = $this->execute("action".ucfirst($action));
-			$this->afterAction();
+			$this->afterAction($action);
 			return $content;
 		}
 		return false;

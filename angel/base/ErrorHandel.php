@@ -2,6 +2,7 @@
 
 namespace angel\base;
 
+use angel\Angel;
 class ErrorHandel extends Object{
 	
 	public function init(){		
@@ -22,15 +23,15 @@ class ErrorHandel extends Object{
 	}
 	
 	public function handleException($exception){
-		var_dump($exception);
+		Angel::error($exception);
 	}
 	
 	public function handleError($code, $message, $file, $line){
-		
+		Angel::error("");
 	}
 	
 	public function handleFatalError(){
-		
+		 $error = error_get_last();
 	}
 }
 

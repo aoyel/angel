@@ -21,6 +21,18 @@ class Server extends Object {
 	const MIN_GZIP_SIZE = 215;
 	
 	/**
+	 * 
+	 * @var swoole_http_request $request
+	 */
+	public $request;
+	
+	/**
+	 * 
+	 * @var \swoole_http_response $respone
+	 */
+	public $respone = null;
+	
+	/**
 	 *
 	 * @param string $host        	
 	 * @param int $port        	
@@ -42,6 +54,8 @@ class Server extends Object {
 	 * @param \swoole_http_response $respone        	
 	 */
 	public function onRequest(\swoole_http_request $request, \swoole_http_response $respone) {
+		$this->request = $request;
+		$this->respone = $respone;
 		if ($this->beforeRequest ( $request, $respone )) {
 			$this->initVars ( $request );
 			$this->handelRequest($request,$respone);
@@ -60,15 +74,8 @@ class Server extends Object {
 		if($this->handelStaticFile($requestUrl,$respone))
 			return true;
 		try {
-			ob_start();			
 			$content = Angel::app()->dispatch->handelRequest($requestUrl);
-			$echo_output = ob_get_contents();
-			if($echo_output)
-				$respone->write($echo_output);
-			if($content)
-				$respone->write($content);
-			ob_end_clean();
-			$respone->end();			
+			$respone->end($content);
 		} catch (Exception $e) {
 			$respone->status(500);
 			$respone->end($e->getMessage());

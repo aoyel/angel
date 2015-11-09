@@ -47,6 +47,7 @@ class Logger extends Object{
 	public function getLogFile(){
 		return "app.log";
 	}
+	
 	protected function processLogs($logs){
 	}
 	

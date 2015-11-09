@@ -6,18 +6,13 @@ use angel\Angel;
 
 class View extends Object {
 	public $title;
-	public $params = [ ];
+	public $params = [];
 	public $content;
 	public $suffix = "php";
 	public $viewsFolder = "views";
 	public $layoutsFolder = "layouts";
-	
-	public $js = [ 
-			'/public/js/app.js' 
-	];
-	
+	public $js = [];
 	public $css = [ ];
-	
 	public $jsBlock = [ ];
 	
 	public function init() {
@@ -36,7 +31,6 @@ class View extends Object {
 	protected function getViewFile($view = null) {
 		
 		$view = $view ? $view : Angel::app ()->controller->action;
-		
 		return implode ( DIRECTORY_SEPARATOR, [ 
 				Angel::app ()->applicationPath,
 				$this->viewsFolder,

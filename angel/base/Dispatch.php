@@ -25,7 +25,8 @@ class Dispatch extends Object{
 				ucfirst($route['controller'])."Controller"
 		]);
 		if(!class_exists($class)){
-			throw new NotFoundException("{$class} is not found!");
+			Angel::error("{$class} is not found!");
+			throw new NotFoundException("{$request} is not found!");
 		}
 		$controller = Angel::createObject([
 				'class'=>$class,
@@ -57,8 +58,6 @@ class Dispatch extends Object{
 		$route ['action'] = isset ( $request [1] ) ? $request [1] : $route ['action'];
 		return $route;
 	}
-	
-	
 }
 
 ?>

@@ -1,4 +1,8 @@
 <h1>Hello world</h1>
 <?php 
-	echo $_SESSION['a'];
+	
+	var_dump($_COOKIE);
 ?>
+
+
+<a href="/index/create">aaa</a>

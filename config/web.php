@@ -15,7 +15,7 @@ return [
 						'directoryLevel' => 1,
 						'keyPrefix' => '__cache' 
 				],
-				'server' => [ 
+				'server' => [
 						'class' => '\angel\base\Server',
 						'host' => '0,0,0,0',
 						'port' => 3927,
@@ -33,7 +33,10 @@ return [
 						'database'=>'angel',
 						'charset'=>'utf-8',
 						'prefix'=>'tbl_'
-				] 
+				],
+				'errorAction'=>[
+						'class'=>'app\controllers\ErrorController'
+				]
 		] 
 ]
 ;

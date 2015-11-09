@@ -3,6 +3,7 @@
 namespace angel\base;
 
 use angel\Angel;
+use angel\helper\FileHelper;
 /**
  *
  * @author smile
@@ -87,10 +88,11 @@ class Application extends Object {
 	{
 		Angel::$app = $this;
 		$this->prepare($config);
-		$this->registerErrorHandler($config);
+		$this->initComponents($config);
+		$this->initEnvironment();
 	}
 	
-	public function coreComponents()
+	protected function coreComponents()
 	{
 		return [
 			'log' => ['class' => '\angel\log\FileLogger'],
@@ -102,7 +104,7 @@ class Application extends Object {
 		];
 	}
 	
-	public function prepare($config){
+	protected function prepare($config){
 		foreach ($config as $k=>$v)
 			$this->$k = $v;
 		Angel::addNamespaceMap($this->appNamespace, $this->applicationPath);
@@ -111,16 +113,39 @@ class Application extends Object {
 		$components = array_merge($coreComponents,$this->components);
 		unset($this->components);
 		$this->loadComponents($components);
+	}
+	
+	/**
+	 * init components
+	 */
+	protected function initComponents($config){
+		$this->registerErrorHandler($config);
 		$this->initDb();
 	}
 	
 	/**
-	 * init data base
+	 * init runtime environment
+	 */
+	protected function initEnvironment(){
+		if(!is_writable($this->runtimePath)){
+			throw new Exception("{$this->runtimePath} is not writable");
+		}
+		if(!is_dir($this->runtimePath)){
+			FileHelper::createDirectory($this->runtimePath);
+		}	
+	}
+		
+	/**
+	 * init database
 	 */
 	protected function initDb(){
 		$this->db->connection();
 	}
 	
+	/**
+	 * load application components
+	 * @param mixed $components
+	 */
 	protected function loadComponents($components){
 		if(empty($components) || !is_array($components))
 			return ;
@@ -130,13 +155,17 @@ class Application extends Object {
 		}
 	}
 	
+	/**
+	 * register error hangel
+	 * @param array|mixed $config
+	 */
 	protected function registerErrorHandler(&$config)
 	{
 		$this->errorHandel->register();
 	}
 	
 	/**
-	 * check 
+	 * check current run mode
 	 * @return boolean
 	 */
 	public function isHttpMode(){
@@ -150,6 +179,20 @@ class Application extends Object {
 		}else{
 			$this->runMode = "http";
 			echo $this->dispatch->handelRequest($_SERVER['REQUEST_URI']);		
+		}
+	}
+	
+	/**
+	 * end application
+	 */
+	public function end($content = null){
+		if($this->isHttpMode()){
+			die($content);
+		}else{
+			if($this->server->respone instanceof \swoole_http_response)
+				$this->server->respone->end($content);
+			else 
+				die();
 		}
 	}
 }
