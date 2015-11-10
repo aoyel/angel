@@ -63,7 +63,7 @@ class View extends Object {
 			return ob_get_clean ();
 		}
 	}
-	
+		
 	public function render($view=null, $params = [], $layout = "default") {
 		$filename = $this->getViewFile ( $view );
 		$this->content = $this->renderFile ( $filename, $params );
@@ -77,19 +77,27 @@ class View extends Object {
 	}
 	
 	public function beginHead() {
+		
 	}
 	
 	public function endHead() {
+		$content = "";
+		if (! empty ( $this->css )) {
+			foreach ( $this->css as $row )
+				$content .= "<link type='text/css' rel='stylesheet' href='{$row}'/>";
+		}
+		return $content;
 	}
 	
 	public function beginContent() {
+				
 	}
 	
 	public function endContent() {
 		$content = "";
 		if (! empty ( $this->js )) {
 			foreach ( $this->js as $row )
-				$content .= "<script src={$row}></script>";
+				$content .= "<script src='{$row}'></script>";
 		}
 		return $content;
 	}

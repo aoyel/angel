@@ -19,7 +19,6 @@ use angel\helper\FileHelper;
 class Server extends Object {
 	
 	const MIN_GZIP_SIZE = 215;
-	
 	/**
 	 * 
 	 * @var swoole_http_request $request
@@ -47,7 +46,9 @@ class Server extends Object {
 		) );
 		$server->start ();
 	}
-		
+	
+	
+	
 	/**
 	 * request handel
 	 * @param \swoole_http_request $request        	
@@ -57,7 +58,7 @@ class Server extends Object {
 		$this->request = $request;
 		$this->respone = $respone;
 		if ($this->beforeRequest ( $request, $respone )) {
-			$this->initVars ( $request );
+			$this->prepareRequest ( $request );
 			$this->handelRequest($request,$respone);
 		}
 		$this->afterRequest ( $request, $respone );
@@ -117,7 +118,7 @@ class Server extends Object {
 	 *
 	 * @param \swoole_http_request $request        	
 	 */
-	public function initVars($request) {
+	public function prepareRequest($request) {
 		$_GET = isset ( $request->get ) ? Angel::app()->request->stripSlashes($request->get) : [ ];
 		$_POST = isset ( $request->post ) ? Angel::app()->request->stripSlashes($request->post) : [ ];
 		$_FILES = isset ( $request->files ) ? $request->files : [ ];
@@ -135,6 +136,8 @@ class Server extends Object {
 		$_SERVER = [];
 		foreach ( $s as $k => $v )
 			$_SERVER [strtoupper ( $k )] = $v;
+		
+		Angel::app()->session->registerSessionCookie();
 	}
 	public function afterRequest($request, $respone) {
 	}
