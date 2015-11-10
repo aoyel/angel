@@ -42,6 +42,8 @@ use angel\helper\FileHelper;
  * 
  * @property \angel\base\Respone $respone configure conponents
  * 
+ * @property \angel\http\Session $session configure conponents
+ * 
  */
 class Application extends Object {
 	/**
@@ -100,7 +102,8 @@ class Application extends Object {
 			'errorHandel'=>['class'=>'\angel\base\ErrorHandel'],
 			'dispatch'=>['class'=>'\angel\base\Dispatch'],
 			'request'=>['class'=>'\angel\base\Request'],
-			'respone'=>['class'=>'\angel\base\Respone']
+			'respone'=>['class'=>'\angel\base\Respone'],
+			'session'=>['class'=>'\angel\http\Session']
 		];
 	}
 	
