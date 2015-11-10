@@ -60,6 +60,18 @@ class Cookie extends Object {
 		return (string) $this->value;
 	}
 	
+	/**
+	 * get cookie value
+	 * @param string $name
+	 * @param string $defaultValue
+	 * @return mixed|string
+	 */
+	public static function getCookie($name,$defaultValue = null){
+		if(isset($_COOKIE[$name]))
+			return $_COOKIE[$name];
+		return $defaultValue;		
+	}
+		
 }
 
 ?>
