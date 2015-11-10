@@ -169,16 +169,16 @@ class Application extends Object {
 	 * @return boolean
 	 */
 	public function isHttpMode(){
-		return $this->runMode === "http";
+		return php_sapi_name() !== "cli";
 	}		
 	
-	public function run(){		
+	public function run(){	
 		if(php_sapi_name() === "cli"){
 			$this->runMode = "cli";
 			$this->server->start();
 		}else{
 			$this->runMode = "http";
-			echo $this->dispatch->handelRequest($_SERVER['REQUEST_URI']);		
+			$this->end($this->dispatch->handelRequest($_SERVER['REQUEST_URI']));		
 		}
 	}
 	
@@ -186,6 +186,7 @@ class Application extends Object {
 	 * end application
 	 */
 	public function end($content = null){
+		$this->errorHandel->unregister();
 		if($this->isHttpMode()){
 			die($content);
 		}else{

@@ -13,7 +13,6 @@ class FileCache extends Cache{
 	
 	public $cachePath = '';
 	
-	
 	public $dirMode = 0775;
 	
 	public $directoryLevel = 2;

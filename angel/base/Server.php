@@ -71,14 +71,15 @@ class Server extends Object {
 	 */
 	public function handelRequest(\swoole_http_request $request, \swoole_http_response $respone) {	
 		$requestUrl = $_SERVER['REQUEST_URI'];
+		$respone->header("Server", "nginx");
 		if($this->handelStaticFile($requestUrl,$respone))
 			return true;
 		try {
 			$content = Angel::app()->dispatch->handelRequest($requestUrl);
-			$respone->end($content);
+			Angel::app()->end($content);
 		} catch (Exception $e) {
 			$respone->status(500);
-			$respone->end($e->getMessage());
+			Angel::app()->end($e->getMessage());
 		}
 	}
 	
@@ -91,7 +92,7 @@ class Server extends Object {
 			$laseModifyTime = @filemtime($filename);
 			if($_SERVER['HTTP_IF_MODIFIED_SINCE'] && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $laseModifyTime){
 				$respone->status(304);
-				$respone->end();
+				Angel::app()->endend();
 			}else{
 				if(filesize($filename) > self::MIN_GZIP_SIZE){
 					$respone->gzip();
@@ -99,7 +100,7 @@ class Server extends Object {
 				$respone->header('Content-Type', $mimeType);
 				$respone->header('last-modified',$laseModifyTime);
 				swoole_async_read($filename, function($filename, $content) use ($respone) {
-					$respone->end($content);
+					Angel::app()->end($content);
 				});
 			}			
 			return true;

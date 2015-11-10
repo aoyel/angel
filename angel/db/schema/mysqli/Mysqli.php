@@ -3,7 +3,7 @@
 namespace angel\db\schema\mysqli;
 use angel\base\Db;
 use angel\exception\DbException;
-
+use angel\exception\DbConnectionException;
 /**
  *
  * @author smile
@@ -24,7 +24,7 @@ class Mysqli extends Db {
 	public function connection() {
 		$this->_db = new \mysqli ( $this->host, $this->username, $this->password, $this->database, $this->port );
 		if ($this->getDb ()->connect_error)
-			throw new DbConnectionException ( 'Connect Error ' . $this->_db->connect_errno . ': ' . $this->_db->connect_error );
+			throw new DbConnectionException( 'Connect Error ' . $this->_db->connect_errno . ': ' . $this->_db->connect_error );
 		
 		if ($this->charset)
 			$this->getDb ()->set_charset ( $this->charset );
