@@ -5,6 +5,9 @@ use angel\base\Object;
 
 class Request extends Object {
 	
+	const SCHEME_HTTP = 'http';
+	const SCHEME_HTTPS = 'https';
+	
 	public function init() {
 		parent::init ();
 		$this->filterRequest ();
