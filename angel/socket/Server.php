@@ -80,7 +80,6 @@ class Server extends Object {
 		$this->server->on('Receive', array($this, 'onReceive'));
 		$this->server->on('Close', array($this, 'onClose'));
 		$this->server->on('WorkerStop', array($this, 'onShutdown'));
-		
 	}
 	
 	public function end(){
