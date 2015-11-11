@@ -16,7 +16,7 @@ return [
 						'keyPrefix' => '__cache' 
 				],
 				'server' => [
-						'class' => '\angel\base\Server',
+						'class' => '\angel\web\Server',
 						'host' => '0,0,0,0',
 						'port' => 3927,
 						'config' => [ 

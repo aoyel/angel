@@ -3,7 +3,6 @@
 namespace angel;
 
 use angel\base\Logger;
-use angel\base\Object;
 
 if(!defined("APP_DEBUG"))
 	define("APP_DEBUG", true);

@@ -26,21 +26,21 @@ use angel\helper\FileHelper;
  * 
  * @property \angel\base\Cache $cache the application cache object
  * 
- * @property \angel\base\server $server the application server
+ * @property \angel\web\server $server the application server
  * 
  * @property \angel\base\ErrorHandel $errorHandel the application error handel
  * 
- * @property \anel\base\Controller $controller the application controller
+ * @property \angel\web\Controller $controller the application controller
  * 
- * @property \anel\base\Action $action the application controller
+ * @property \angel\base\Action $action the application controller
  * 
  * @property \angel\base\Db $db the application db object
  * 
- * @property \angel\base\Dispatch $dispatch configure conponents
+ * @property \angel\web\Dispatch $dispatch configure conponents
  * 
- * @property \angel\base\Request $request configure conponents
+ * @property \angel\web\Request $request configure conponents
  * 
- * @property \angel\base\Respone $respone configure conponents
+ * @property \angel\web\Respone $respone configure conponents
  * 
  * @property \angel\http\Session $session configure conponents
  * 
@@ -100,9 +100,9 @@ class Application extends Object {
 			'log' => ['class' => '\angel\log\FileLogger'],
 			'view' => ['class' => '\angel\base\View'],
 			'errorHandel'=>['class'=>'\angel\base\ErrorHandel'],
-			'dispatch'=>['class'=>'\angel\base\Dispatch'],
-			'request'=>['class'=>'\angel\base\Request'],
-			'respone'=>['class'=>'\angel\base\Respone'],
+			'dispatch'=>['class'=>'\angel\web\Dispatch'],
+			'request'=>['class'=>'\angel\web\Request'],
+			'respone'=>['class'=>'\angel\web\Respone'],
 			'session'=>['class'=>'\angel\http\Session']
 		];
 	}

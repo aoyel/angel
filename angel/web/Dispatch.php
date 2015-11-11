@@ -1,6 +1,6 @@
 <?php
 
-namespace angel\base;
+namespace angel\web;
 use angel\base\Object;
 use angel\Angel;
 use angel\exception\NotFoundException;
@@ -10,8 +10,7 @@ use angel\exception\NotFoundException;
  * @author smile
  *
  */
-class Dispatch extends Object{
-	
+class Dispatch extends Object{	
 	/**
 	 * handel request
 	 * @param string $request

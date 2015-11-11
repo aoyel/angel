@@ -1,10 +1,11 @@
 <?php
 
-namespace angel\base;
+namespace angel\web;
 
 use angel\Angel;
 use angel\exception\NotFoundException;
 use angel\helper\FileHelper;
+use angel\base\Object;
 /**
  *
  * @author smile

@@ -1,21 +1,11 @@
 <?php
 
-namespace angel\base;
+namespace angel\web;
 use angel\Angel;
+use angel\base\Object;
 
-/**
- * 
- * @author smile
- *
- *
- *@property \swoole_http_request Request
- *
- *@property \swoole_http_response Respone
- *
- */
 
-class Controller extends Object {
-	
+class Controller extends Object {		
 	public $id;	
 	public $layout = "default";
 	public $action = null;

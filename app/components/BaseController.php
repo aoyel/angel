@@ -1,11 +1,10 @@
 <?php
 
 namespace app\components;
-
-use angel\base\Controller;
+use angel\web\Controller;
 
 class BaseController extends Controller {
-	
+		
 }
 
 ?>

@@ -1,6 +1,7 @@
 <?php
 
-namespace angel\base;
+namespace angel\web;
+use angel\base\Object;
 
 class Request extends Object {
 	

@@ -1,8 +1,9 @@
 <?php
 
-namespace angel\base;
-
+namespace angel\web;
 use angel\Angel;
+use angel\base\Object;
+
 class Respone extends Object{
 	
 	static $HTTP_HEADERS = array(
